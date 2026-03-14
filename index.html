@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Tuyển Chọn Support</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#00b4ff,#0066ff);
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+}
+
+.box{
+background:rgba(0,0,0,0.35);
+padding:30px;
+border-radius:12px;
+width:600px;
+text-align:center;
+}
+
+input,textarea{
+width:90%;
+padding:10px;
+border-radius:8px;
+border:none;
+margin-top:10px;
+font-size:16px;
+}
+
+textarea{
+height:160px;
+}
+
+button{
+margin-top:20px;
+padding:10px 25px;
+border:none;
+border-radius:8px;
+background:#00ffcc;
+font-weight:bold;
+cursor:pointer;
+}
+
+.hidden{
+display:none;
+}
+
+.stop{
+font-size:40px;
+color:red;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box" id="start">
+<h1>Tuyển Chọn Support</h1>
+
+<input id="username" placeholder="Nhập Tên Người Dùng">
+
+<br>
+<button onclick="startTest()">Bắt Đầu Kiểm Tra</button>
+</div>
+
+<div class="box hidden" id="q1">
+<h2>Câu 1</h2>
+<p>Lua / Luau là gì? Viết code 1 GUI Lua / Luau bất kỳ</p>
+
+<textarea id="answer1"></textarea>
+
+<br>
+<button onclick="nextQuestion()">Câu Hỏi Tiếp Theo</button>
+</div>
+
+<div class="box hidden" id="q2">
+<h2>Câu 2</h2>
+<p>VM , Control Flow là gì trong Obfuscator?</p>
+
+<textarea id="answer2"></textarea>
+
+<br>
+<button onclick="submitTest()">Nộp Bài</button>
+</div>
+
+<div class="box hidden" id="stop">
+<div class="stop">STOP AI!</div>
+</div>
+
+<script>
+
+let cancelled=false
+
+function stopAI(){
+
+if(cancelled) return
+cancelled=true
+
+document.getElementById("start").classList.add("hidden")
+document.getElementById("q1").classList.add("hidden")
+document.getElementById("q2").classList.add("hidden")
+
+document.getElementById("stop").classList.remove("hidden")
+
+}
+
+function startTest(){
+
+let name=document.getElementById("username").value
+
+if(name.trim()==""){
+alert("Nhập tên trước")
+return
+}
+
+document.getElementById("start").classList.add("hidden")
+document.getElementById("q1").classList.remove("hidden")
+
+}
+
+function nextQuestion(){
+
+document.getElementById("q1").classList.add("hidden")
+document.getElementById("q2").classList.remove("hidden")
+
+}
+
+async function submitTest(){
+
+if(cancelled) return
+
+let name=document.getElementById("username").value
+let a1=document.getElementById("answer1").value
+let a2=document.getElementById("answer2").value
+
+await fetch("/api/send",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name:name,
+q1:a1,
+q2:a2
+})
+})
+
+alert("Đã nộp bài!")
+
+location.reload()
+
+}
+
+document.getElementById("answer1").addEventListener("paste",stopAI)
+document.getElementById("answer2").addEventListener("paste",stopAI)
+
+document.addEventListener("visibilitychange",function(){
+
+if(document.hidden){
+stopAI()
+}
+
+})
+
+window.addEventListener("blur",function(){
+
+stopAI()
+
+})
+
+</script>
+
+</body>
+</html>
