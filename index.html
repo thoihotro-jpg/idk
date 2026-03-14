@@ -5,46 +5,102 @@
 <title>Tuyển Chọn Support</title>
 
 <style>
+
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
 body{
 margin:0;
-font-family:Arial;
-background:linear-gradient(135deg,#00b4ff,#0066ff);
 height:100vh;
 display:flex;
-align-items:center;
 justify-content:center;
-color:white;
+align-items:center;
+background:linear-gradient(135deg,#00b4ff,#004cff);
+overflow:hidden;
+}
+
+body::before{
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+background:radial-gradient(circle,#00eaff55,transparent 60%);
+animation:bgmove 10s linear infinite;
+}
+
+@keyframes bgmove{
+0%{transform:translate(-20%,-20%)}
+50%{transform:translate(-10%,10%)}
+100%{transform:translate(-20%,-20%)}
 }
 
 .box{
-background:rgba(0,0,0,0.35);
-padding:30px;
-border-radius:12px;
-width:600px;
+width:650px;
+padding:40px;
+border-radius:15px;
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(15px);
+color:white;
 text-align:center;
+animation:fade 0.7s ease;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(20px)
+}
+to{
+opacity:1;
+transform:translateY(0)
+}
+}
+
+h1{
+margin-top:0;
+text-shadow:0 0 10px #00eaff;
 }
 
 input,textarea{
-width:90%;
-padding:10px;
-border-radius:8px;
+width:95%;
+padding:12px;
 border:none;
+border-radius:8px;
 margin-top:10px;
-font-size:16px;
+font-size:15px;
+background:#ffffffdd;
+transition:0.2s;
+}
+
+input:focus,textarea:focus{
+outline:none;
+transform:scale(1.02);
+box-shadow:0 0 10px #00eaff;
 }
 
 textarea{
-height:160px;
+height:170px;
+resize:none;
 }
 
 button{
 margin-top:20px;
-padding:10px 25px;
+padding:12px 30px;
 border:none;
 border-radius:8px;
-background:#00ffcc;
 font-weight:bold;
+font-size:15px;
 cursor:pointer;
+background:linear-gradient(90deg,#00ffd5,#00aaff);
+color:black;
+transition:0.2s;
+}
+
+button:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px #00eaff;
 }
 
 .hidden{
@@ -52,46 +108,64 @@ display:none;
 }
 
 .stop{
-font-size:40px;
+font-size:45px;
 color:red;
 font-weight:bold;
+text-shadow:0 0 15px red;
+animation:pulse 1s infinite;
 }
+
+@keyframes pulse{
+0%{opacity:1}
+50%{opacity:0.4}
+100%{opacity:1}
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="box" id="start">
+
 <h1>Tuyển Chọn Support</h1>
 
 <input id="username" placeholder="Nhập Tên Người Dùng">
 
 <br>
+
 <button onclick="startTest()">Bắt Đầu Kiểm Tra</button>
+
 </div>
 
 <div class="box hidden" id="q1">
+
 <h2>Câu 1</h2>
+
 <p>Lua / Luau là gì? Viết code 1 GUI Lua / Luau bất kỳ</p>
 
 <textarea id="answer1"></textarea>
 
-<br>
 <button onclick="nextQuestion()">Câu Hỏi Tiếp Theo</button>
+
 </div>
 
 <div class="box hidden" id="q2">
+
 <h2>Câu 2</h2>
+
 <p>VM , Control Flow là gì trong Obfuscator?</p>
 
 <textarea id="answer2"></textarea>
 
-<br>
 <button onclick="submitTest()">Nộp Bài</button>
+
 </div>
 
 <div class="box hidden" id="stop">
+
 <div class="stop">STOP AI!</div>
+
 </div>
 
 <script>
@@ -100,7 +174,8 @@ let cancelled=false
 
 function stopAI(){
 
-if(cancelled) return
+if(cancelled)return
+
 cancelled=true
 
 document.getElementById("start").classList.add("hidden")
@@ -134,7 +209,7 @@ document.getElementById("q2").classList.remove("hidden")
 
 async function submitTest(){
 
-if(cancelled) return
+if(cancelled)return
 
 let name=document.getElementById("username").value
 let a1=document.getElementById("answer1").value
@@ -170,9 +245,7 @@ stopAI()
 })
 
 window.addEventListener("blur",function(){
-
 stopAI()
-
 })
 
 </script>
